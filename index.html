@@ -46,8 +46,61 @@
             font-size: 16px;
             background: white;
         }
+        .back-button {
+            display: none;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            padding: 10px 20px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .back-button:hover {
+            background: #0056b3;
+        }
         .results {
             margin-top: 20px;
+        }
+        
+        /* Estilos para la vista de lista (primera pantalla) */
+        .color-list-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            margin-bottom: 10px;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .color-list-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+        .color-list-preview {
+            width: 60px;
+            height: 60px;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            margin-right: 20px;
+            flex-shrink: 0;
+        }
+        .color-list-name {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            flex-grow: 1;
+        }
+        
+        /* Estilos para la vista detallada (segunda pantalla) */
+        .color-detail {
+            display: none;
         }
         .color-card {
             background: white;
@@ -88,12 +141,34 @@
             border: 1px solid #e9ecef;
             border-radius: 4px;
             font-family: monospace;
-            font-size: 12px;
+            font-size: 24px; /* Tamaño duplicado de 12px a 24px */
+            position: relative;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .color-code:hover {
+            background: #e9ecef;
         }
         .color-code strong {
             display: block;
             margin-bottom: 4px;
             color: #666;
+            font-size: 24px; /* Tamaño duplicado de 12px a 24px */
+        }
+        .copy-feedback {
+            position: absolute;
+            top: -30px;
+            right: 5px;
+            background: #28a745;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .copy-feedback.show {
+            opacity: 1;
         }
         .complementary-section {
             margin-top: 20px;
@@ -131,8 +206,17 @@
             border: 1px solid #ddd;
             border-radius: 3px;
             font-family: monospace;
-            font-size: 11px;
+            font-size: 22px; /* Tamaño duplicado de 11px a 22px */
             text-align: center;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            position: relative;
+        }
+        .complementary-code:hover {
+            background: #f8f9fa;
+        }
+        .complementary-code strong {
+            font-size: 22px; /* Tamaño duplicado de 11px a 22px */
         }
         .analogous-section {
             margin-top: 20px;
@@ -153,12 +237,18 @@
         }
         .analogous-color {
             text-align: center;
-            font-size: 12px;
+            font-size: 24px; /* Tamaño duplicado de 12px a 24px */
             font-family: monospace;
             padding: 5px;
             background: white;
             border: 1px solid #ddd;
             border-radius: 3px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            position: relative;
+        }
+        .analogous-color:hover {
+            background: #f8f9fa;
         }
         .no-results {
             text-align: center;
@@ -178,8 +268,42 @@
     <div class="container">
         <h1>🎨 Buscador de Colores</h1>
         
-        <div class="search-container">
-            <input type="text" id="colorSearch" placeholder="Buscar color por nombre (ej: azul, rojo, verde...)">
+        <button class="back-button" id="backButton">
+            ← Volver a la lista
+        </button>
+        
+        <div class="search-container" id="searchContainer">
+            <select id="colorSearch">
+                <option value="">Seleccionar color...</option>
+                <option value="Aguamarina">Aguamarina</option>
+                <option value="Amarillo">Amarillo</option>
+                <option value="Azul">Azul</option>
+                <option value="Beige">Beige</option>
+                <option value="Blanco">Blanco</option>
+                <option value="Borgoña">Borgoña</option>
+                <option value="Cian">Cian</option>
+                <option value="Coral">Coral</option>
+                <option value="Dorado">Dorado</option>
+                <option value="Fucsia">Fucsia</option>
+                <option value="Granate">Granate</option>
+                <option value="Gris">Gris</option>
+                <option value="Índigo">Índigo</option>
+                <option value="Lavanda">Lavanda</option>
+                <option value="Lima">Lima</option>
+                <option value="Magenta">Magenta</option>
+                <option value="Malva">Malva</option>
+                <option value="Marino">Marino</option>
+                <option value="Musgo">Musgo</option>
+                <option value="Naranja">Naranja</option>
+                <option value="Negro">Negro</option>
+                <option value="Oliva">Oliva</option>
+                <option value="Púrpura">Púrpura</option>
+                <option value="Rojo">Rojo</option>
+                <option value="Rosa">Rosa</option>
+                <option value="Turquesa">Turquesa</option>
+                <option value="Verde">Verde</option>
+                <option value="Violeta">Violeta</option>
+            </select>
             <select id="sortSelect">
                 <option value="name">Ordenar por nombre</option>
                 <option value="hex">Ordenar por código HEX</option>
@@ -194,6 +318,7 @@
         </div>
         
         <div class="results" id="results"></div>
+        <div class="color-detail" id="colorDetail"></div>
     </div>
 
     <script type="module">
@@ -1676,6 +1801,8 @@
 
 `;
 
+        let currentView = 'list'; // 'list' o 'detail'
+
         // Función para procesar los colores desde el texto
         function processColorData(text) {
             const colorDataArray = [];
@@ -1700,6 +1827,26 @@
         
         // Verificar que los datos se cargaron correctamente
         console.log('Colores cargados:', colorDataArray?.length || 0);
+
+        // Función para copiar al portapapeles
+        function copyToClipboard(text, element) {
+            navigator.clipboard.writeText(text).then(() => {
+                // Mostrar feedback visual
+                let feedback = element.querySelector('.copy-feedback');
+                if (!feedback) {
+                    feedback = document.createElement('div');
+                    feedback.className = 'copy-feedback';
+                    feedback.textContent = '¡Copiado!';
+                    element.appendChild(feedback);
+                }
+                feedback.classList.add('show');
+                setTimeout(() => {
+                    feedback.classList.remove('show');
+                }, 1000);
+            }).catch(err => {
+                console.error('Error al copiar:', err);
+            });
+        }
 
         // Función para convertir RYB a RGB aproximado
         function rybToRgb(r, y, b) {
@@ -1801,8 +1948,93 @@
             return `#${f(0)}${f(8)}${f(4)}`;
         }
 
-        // Función para renderizar los resultados
-        function renderResults(colors) {
+        // Función para mostrar la vista de lista
+        function showListView() {
+            currentView = 'list';
+            document.getElementById('backButton').style.display = 'none';
+            document.getElementById('searchContainer').style.display = 'flex';
+            document.getElementById('stats').style.display = 'block';
+            document.getElementById('results').style.display = 'block';
+            document.getElementById('colorDetail').style.display = 'none';
+            searchColors();
+        }
+
+        // Función para mostrar la vista de detalle
+        function showDetailView(colorData) {
+            currentView = 'detail';
+            document.getElementById('backButton').style.display = 'flex';
+            document.getElementById('searchContainer').style.display = 'none';
+            document.getElementById('stats').style.display = 'none';
+            document.getElementById('results').style.display = 'none';
+            document.getElementById('colorDetail').style.display = 'block';
+            
+            renderColorDetail(colorData);
+        }
+
+        // Función para renderizar la vista detallada de un color
+        function renderColorDetail(colorData) {
+            const detailContainer = document.getElementById('colorDetail');
+            const hex = `#${colorData.hex}`;
+            const complementary = getComplementaryColor(colorData);
+            const analogous = generateAnalogousColors(hex);
+            
+            detailContainer.innerHTML = `
+                <div class="color-card">
+                    <div class="color-preview" style="background-color: ${hex};">
+                        ${colorData.name}
+                    </div>
+                    <div class="color-name">${colorData.name}</div>
+                    <div class="color-codes">
+                        <div class="color-code" onclick="copyToClipboard('${hex}', this)">
+                            <strong>HEX:</strong>
+                            ${hex}
+                        </div>
+                        <div class="color-code" onclick="copyToClipboard('${colorData.rgb}', this)">
+                            <strong>RGB:</strong>
+                            ${colorData.rgb}
+                        </div>
+                        <div class="color-code" onclick="copyToClipboard('${colorData.ryb}', this)">
+                            <strong>RYB:</strong>
+                            ${colorData.ryb}
+                        </div>
+                    </div>
+                    
+                    ${complementary ? `
+                        <div class="complementary-section">
+                            <div class="complementary-title">🎯 Color Complementario</div>
+                            <div class="complementary-preview" style="background-color: ${complementary.hex};">
+                                Complementario
+                            </div>
+                            <div class="complementary-codes">
+                                <div class="complementary-code" onclick="copyToClipboard('${complementary.hex}', this)">
+                                    <strong>HEX:</strong><br>${complementary.hex}
+                                </div>
+                                <div class="complementary-code" onclick="copyToClipboard('${complementary.rgb}', this)">
+                                    <strong>RGB:</strong><br>${complementary.rgb}
+                                </div>
+                                <div class="complementary-code" onclick="copyToClipboard('${complementary.ryb}', this)">
+                                    <strong>RYB:</strong><br>${complementary.ryb}
+                                </div>
+                            </div>
+                        </div>
+                    ` : ''}
+                    
+                    <div class="analogous-section">
+                        <div class="analogous-title">🔄 Colores Análogos</div>
+                        <div class="analogous-colors">
+                            ${analogous.map(analogousColor => `
+                                <div class="analogous-color" onclick="copyToClipboard('${analogousColor}', this)" style="background-color: ${analogousColor}; color: white; text-shadow: 1px 1px 2px rgba(0,0,0,0.7);">
+                                    ${analogousColor}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Función para renderizar la vista de lista
+        function renderListView(colors) {
             const resultsContainer = document.getElementById('results');
             const colorCount = document.getElementById('colorCount');
             
@@ -1815,60 +2047,10 @@
             
             resultsContainer.innerHTML = colors.map(colorData => {
                 const hex = `#${colorData.hex}`;
-                const complementary = getComplementaryColor(colorData);
-                const analogous = generateAnalogousColors(hex);
-                
                 return `
-                    <div class="color-card">
-                        <div class="color-preview" style="background-color: ${hex};">
-                            ${colorData.name}
-                        </div>
-                        <div class="color-name">${colorData.name}</div>
-                        <div class="color-codes">
-                            <div class="color-code">
-                                <strong>HEX:</strong>
-                                ${hex}
-                            </div>
-                            <div class="color-code">
-                                <strong>RGB:</strong>
-                                ${colorData.rgb}
-                            </div>
-                            <div class="color-code">
-                                <strong>RYB:</strong>
-                                ${colorData.ryb}
-                            </div>
-                        </div>
-                        
-                        ${complementary ? `
-                            <div class="complementary-section">
-                                <div class="complementary-title">🎯 Color Complementario</div>
-                                <div class="complementary-preview" style="background-color: ${complementary.hex};">
-                                    Complementario
-                                </div>
-                                <div class="complementary-codes">
-                                    <div class="complementary-code">
-                                        <strong>HEX:</strong><br>${complementary.hex}
-                                    </div>
-                                    <div class="complementary-code">
-                                        <strong>RGB:</strong><br>${complementary.rgb}
-                                    </div>
-                                    <div class="complementary-code">
-                                        <strong>RYB:</strong><br>${complementary.ryb}
-                                    </div>
-                                </div>
-                            </div>
-                        ` : ''}
-                        
-                        <div class="analogous-section">
-                            <div class="analogous-title">🔄 Colores Análogos</div>
-                            <div class="analogous-colors">
-                                ${analogous.map(analogousColor => `
-                                    <div class="analogous-color">
-                                        ${analogousColor}
-                                    </div>
-                                `).join('')}
-                            </div>
-                        </div>
+                    <div class="color-list-item" onclick="showDetailView(${JSON.stringify(colorData).replace(/"/g, '&quot;')})">
+                        <div class="color-list-preview" style="background-color: ${hex};"></div>
+                        <div class="color-list-name">${colorData.name}</div>
                     </div>
                 `;
             }).join('');
@@ -1902,6 +2084,8 @@
 
         // Función para buscar y filtrar colores
         function searchColors() {
+            if (currentView !== 'list') return;
+            
             const searchTerm = document.getElementById('colorSearch').value.toLowerCase();
             const sortBy = document.getElementById('sortSelect').value;
             
@@ -1921,15 +2105,20 @@
             }
             
             const sortedColors = sortColors(filteredColors, sortBy);
-            renderResults(sortedColors);
+            renderListView(sortedColors);
         }
 
+        // Hacer funciones globales
+        window.showDetailView = showDetailView;
+        window.copyToClipboard = copyToClipboard;
+
         // Event listeners
-        document.getElementById('colorSearch').addEventListener('input', searchColors);
+        document.getElementById('colorSearch').addEventListener('change', searchColors);
         document.getElementById('sortSelect').addEventListener('change', searchColors);
+        document.getElementById('backButton').addEventListener('click', showListView);
 
         // Cargar todos los colores al inicio
-        searchColors();
+        showListView();
     </script>
 </body>
 </html>
