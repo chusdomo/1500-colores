@@ -147,7 +147,7 @@
         }
         
         .color-name {
-            font-size: 28px; /* Un poco más grande que el texto base */
+            font-size: 24px; /* Mismo tamaño que los códigos */
             font-weight: bold;
             color: #333;
             margin-bottom: 10px;
@@ -1902,6 +1902,7 @@
 {"preview":"8806CE","name":"Violeta_Oscuro_Frío_8","hex":"8806CE","rgb":"136, 6, 206","ryb":"39,1,60","complRyb":"61,99,40"}
 {"preview":"9400D3","name":"Violeta_Oscuro_Frío_9","hex":"9400D3","rgb":"148, 0, 211","ryb":"41,0,59","complRyb":"59,100,41"}
 {"preview":"6A5ACD","name":"Violeta_Oscuro_Suave_1","hex":"6A5ACD","rgb":"106, 90, 205","ryb":"26,22,52","complRyb":"74,78,48"}
+
 `;
 
         let currentView = 'list'; // 'list' o 'detail'
@@ -2074,19 +2075,25 @@
             renderColorDetail(colorData);
         }
 
+        // Función para procesar nombres de colores (reemplazar guiones bajos por espacios)
+        function formatColorName(name) {
+            return name.replace(/_/g, ' ');
+        }
+
         // Función para renderizar la vista detallada de un color
         function renderColorDetail(colorData) {
             const detailContainer = document.getElementById('colorDetail');
             const hex = `#${colorData.hex}`;
             const complementary = getComplementaryColor(colorData);
             const analogous = generateAnalogousColors(hex);
+            const formattedName = formatColorName(colorData.name);
             
             detailContainer.innerHTML = `
                 <div class="color-card">
                     <div class="color-preview" style="background-color: ${hex};">
-                        ${colorData.name}
+                        ${formattedName}
                     </div>
-                    <div class="color-name">${colorData.name}</div>
+                    <div class="color-name">${formattedName}</div>
                     <div class="color-codes">
                         <div class="color-code" onclick="copyToClipboard('${hex}', this)">
                             <strong>HEX:</strong>
@@ -2150,10 +2157,11 @@
             
             resultsContainer.innerHTML = colors.map(colorData => {
                 const hex = `#${colorData.hex}`;
+                const formattedName = formatColorName(colorData.name);
                 return `
                     <div class="color-list-item" onclick="showDetailView(${JSON.stringify(colorData).replace(/"/g, '&quot;')})">
                         <div class="color-list-preview" style="background-color: ${hex};"></div>
-                        <div class="color-list-name">${colorData.name}</div>
+                        <div class="color-list-name">${formattedName}</div>
                     </div>
                 `;
             }).join('');
